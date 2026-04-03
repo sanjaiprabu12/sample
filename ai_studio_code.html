@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iron Forge Fitness | Elite Gym</title>
+    <style>
+        /* =========================================
+           1. CORE STYLES & VARIABLES
+        ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #ff4500; /* Energetic Orange */
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --light-text: #ffffff;
+            --gray-text: #b3b3b3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--dark-bg); color: var(--light-text); line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+
+        /* =========================================
+           2. NAVIGATION BAR
+        ========================================= */
+        header { background-color: rgba(10, 10, 10, 0.95); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary-color); }
+        .logo { font-size: 2rem; font-weight: 700; color: var(--light-text); text-decoration: none; font-family: 'Oswald', sans-serif; }
+        .logo span { color: var(--primary-color); }
+        nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+        nav a { color: var(--light-text); text-decoration: none; font-weight: 700; transition: color 0.3s; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-link { color: var(--primary-color); cursor: pointer; font-weight: 700; border: 1px solid var(--primary-color); padding: 5px 15px; border-radius: 20px; transition: 0.3s; }
+        .auth-link:hover { background-color: var(--primary-color); color: white; }
+        .btn { background-color: var(--primary-color); color: white; padding: 0.8rem 1.5rem; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: background 0.3s, transform 0.2s; text-decoration: none; display: inline-block; border-radius: 4px; text-align: center; }
+        .btn:hover { background-color: #cc3700; transform: scale(1.05); }
+
+        /* =========================================
+           3. MAIN SECTIONS
+        ========================================= */
+        .hero { height: 100vh; background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop') center/cover; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
+        .hero h1 { font-size: 5rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; color: var(--gray-text); margin-bottom: 30px; max-width: 600px; }
+        
+        section { padding: 5rem 5%; }
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 3rem; color: var(--primary-color); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .card { background-color: var(--darker-bg); padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #333; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
+
+        /* PRICING CARDS */
+        .pricing-card { background-color: var(--darker-bg); padding: 3rem 2rem; text-align: center; border-radius: 8px; border: 1px solid #333; display: flex; flex-direction: column; }
+        .pricing-card.popular { border: 2px solid var(--primary-color); transform: scale(1.05); }
+        .price { font-size: 3rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
+        .price span { font-size: 1.2rem; color: var(--gray-text); }
+        ul.features-list { list-style: none; margin: 2rem 0; color: var(--gray-text); flex-grow: 1; }
+        ul.features-list li { margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        /* =========================================
+           4. MODALS (POP-UPS)
+        ========================================= */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .modal-content { background-color: var(--darker-bg); padding: 2.5rem; border: 1px solid var(--primary-color); border-radius: 8px; width: 90%; max-width: 450px; position: relative; box-shadow: 0 0 20px rgba(255, 69, 0, 0.2); animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: var(--gray-text); font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s; }
+        .close-btn:hover { color: var(--primary-color); }
+        
+        /* Auth Specific (Login/Signup) */
+        .auth-tabs { display: flex; margin-bottom: 1.5rem; border-bottom: 1px solid #333; }
+        .auth-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: var(--gray-text); font-weight: bold; transition: 0.3s; }
+        .auth-tab.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+        
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.4rem; color: var(--gray-text); font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 10px; background-color: var(--dark-bg); border: 1px solid #333; color: white; border-radius: 4px; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--primary-color); }
+        .btn-full { width: 100%; margin-top: 1rem; }
+
+        /* Payment Specific */
+        .payment-content { text-align: center; }
+        .order-summary { background: var(--dark-bg); padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; border: 1px dashed #555; }
+        .order-summary h3 { font-size: 1.5rem; color: var(--light-text); }
+        .order-summary p { font-size: 1.2rem; color: var(--primary-color); font-weight: bold; margin-top: 5px; }
+        .payment-methods { display: flex; flex-direction: column; gap: 10px; }
+        .pay-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; font-size: 1.1rem; font-weight: bold; border-radius: 6px; cursor: pointer; border: none; transition: 0.3s; color: white; }
+        .gpay-btn { background-color: #ffffff; color: #3c4043; border: 1px solid #dadce0; }
+        .gpay-btn:hover { background-color: #f8f9fa; }
+        .gpay-btn img { height: 20px; }
+        .phonepe-btn { background-color: #5f259f; color: white; }
+        .phonepe-btn:hover { background-color: #4a1d7c; }
+        .card-btn { background-color: #333; color: white; }
+        .card-btn:hover { background-color: #444; }
+        .qr-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #333; }
+        .qr-section img { width: 150px; border-radius: 8px; margin-top: 10px; border: 2px solid white; }
+
+        /* Footer */
+        footer { background-color: var(--darker-bg); text-align: center; padding: 3rem 5%; border-top: 1px solid #333; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) { nav ul { display: none; } .hero h1 { font-size: 3rem; } .pricing-card.popular { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================
+         NAVIGATION
+    ========================================= -->
+    <header>
+        <a href="#" class="logo">IRON<span>FORGE</span></a>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#classes">Classes</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a class="auth-link" onclick="openAuth('login')">👤 Account</a></li>
+            </ul>
+        </nav>
+        <a href="#pricing" class="btn">Join Now</a>
+    </header>
+
+    <!-- =========================================
+         MODAL 1: LOGIN & SIGN UP
+    ========================================= -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+            
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</div>
+                <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form-login" class="auth-form active" onsubmit="handleAuth(event, 'Login')">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-full">Secure Login</button>
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem;">
+                    <a href="#" style="color: var(--gray-text); text-decoration: none;">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="form-signup" class="auth-form" onsubmit="handleAuth(event, 'Sign Up')">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" placeholder="+91 98765 43210" required>
+                </div>
+                <div class="form-group">
+                    <label>Create Password</label>
+                    <input type="password" placeholder="Min 8 characters" required>
+                </div>
+                <button type="submit" class="btn btn-full">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================
+         MODAL 2: PAYMENT / CHECKOUT
+    ========================================= -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content payment-content">
+            <span class="close-btn" onclick="closeModal('paymentModal')">&times;</span>
+            <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Secure Checkout</h2>
+            
+            <!-- Dynamic Order Summary -->
+            <div class="order-summary">
+                <h3 id="checkoutPlanName">Plan Name</h3>
+                <p id="checkoutPlanPrice">$0/mo</p>
+            </div>
+
+            <p style="margin-bottom: 15px; color: var(--gray-text); text-align: left;">Select Payment Method:</p>
+
+            <div class="payment-methods">
+                <button class="pay-btn gpay-btn" onclick="processPayment('Google Pay')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay">
+                    Pay with GPay
+                </button>
+                <button class="pay-btn phonepe-btn" onclick="processPayment('PhonePe')">
+                    <strong>पे</strong> PhonePe
+                </button>
+                <button class="pay-btn card-btn" onclick="processPayment('Credit/Debit Card')">
+                    💳 Credit / Debit Card
+                </button>
+            </div>
+
+            <div class="qr-section">
+                <p style="color: var(--gray-text); font-size: 0.9rem;">Or scan with any UPI App:</p>
+                <!-- NOTE: Replace 'yourvpa@upi' with your actual Gym's UPI ID below -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=yourvpa@upi&pn=IronForgeGym&cu=INR" alt="UPI QR Code">
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+         WEBSITE CONTENT
+    ========================================= -->
+    <section id="home" class="hero">
+        <h1>Push Your Limits</h1>
+        <p>State-of-the-art equipment, elite trainers, and a community that pushes you to be your absolute best. Open 24/7.</p>
+        <button onclick="openAuth('signup')" class="btn">Start Your Fitness Journey</button>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">Why Choose Us</h2>
+        <div class="grid">
+            <div class="card">
+                <h2>🏋️‍♂️</h2>
+                <h3>Premium Equipment</h3>
+                <p>Top-of-the-line free weights, resistance machines, and cardio equipment to ensure you get the perfect workout.</p>
+            </div>
+            <div class="card">
+                <h2>🕒</h2>
+                <h3>24/7 Access</h3>
+                <p>Your goals don't sleep, and neither do we. Work out on your schedule with secure, around-the-clock facility access.</p>
+            </div>
+            <div class="card">
+                <h2>🥇</h2>
+                <h3>Expert Trainers</h3>
+                <p>Our certified personal trainers are here to build custom plans and keep you accountable to your goals.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="classes" style="background-color: var(--darker-bg);">
+        <h2 class="section-title">Our Classes</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>🔥 HIIT</h3>
+                <p>High-Intensity Interval Training designed to burn maximum calories in minimum time.</p>
+            </div>
+            <div class="card">
+                <h3>💪 Powerlifting</h3>
+                <p>Focus on the big three: Squat, Bench, and Deadlift. Build raw strength and power.</p>
+            </div>
+            <div class="card">
+                <h3>🧘‍♀️ Yoga & Mobility</h3>
+                <p>Improve flexibility, core strength, and recovery with our guided mobility sessions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing">
+        <h2 class="section-title">Memberships</h2>
+        <div class="grid">
+            <!-- Basic -->
+            <div class="pricing-card">
+                <h3 class="plan-title">Basic</h3>
+                <div class="price plan-price">₹1,999<span>/mo</span></div>
+                <ul class="features-list">
+                    <li>Access during staffed hours</li>
+                    <li>Full gym floor access</li>
+                    <li>Locker room access</li>
+                </ul>
+                <button class="btn select-plan-btn">Select Plan</button>
+            </div>
+            <!-- Pro -->
+            <div class="pricing-card popular">
+                <h3 class="plan-title" style="color: var(--primary-color);">Pro (Popular)</h3>
+                <div class="price plan-price">₹2,999<span>/mo</span></div>
+                <ul class="features-list">
+                    <li>24/7 Keyfob Access</li>
+                    <li>All group classes included</li>
+                    <li>1 Free PT session / month</li>
+                </ul>
+                <button class="btn select-plan-btn">Select Plan</button>
+            </div>
+            <!-- Elite -->
+            <div class="pricing-card">
+                <h3 class="plan-title">Elite</h3>
+                <div class="price plan-price">₹4,999<span>/mo</span></div>
+                <ul class="features-list">
+                    <li>24/7 Keyfob Access</li>
+                    <li>Weekly Personal Training</li>
+                    <li>Free customized nutrition plan</li>
+                </ul>
+                <button class="btn select-plan-btn">Select Plan</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="color: var(--primary-color); margin-bottom: 1rem;">IRON FORGE FITNESS</h2>
+        <p>123 Muscle Avenue, Iron City, ST 12345</p>
+        <p>Email: info@ironforgefitness.com | Phone: (555) 123-4567</p>
+        <p style="margin-top: 2rem; color: var(--gray-text); font-size: 0.9rem;">&copy; 2024 Iron Forge Fitness. All Rights Reserved.</p>
+    </footer>
+
+    <!-- =========================================
+         JAVASCRIPT / LOGIC
+    ========================================= -->
+    <script>
+        // --- MODAL UTILITIES ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+
+        // --- AUTH LOGIC (LOGIN & SIGNUP) ---
+        function openAuth(tab) {
+            document.getElementById('authModal').style.display = "flex";
+            switchAuthTab(tab);
+        }
+
+        function switchAuthTab(tab) {
+            // Remove active class from all tabs and forms
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-signup').classList.remove('active');
+            document.getElementById('form-login').classList.remove('active');
+            document.getElementById('form-signup').classList.remove('active');
+
+            // Add active class to selected tab and form
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('form-' + tab).classList.add('active');
+        }
+
+        function handleAuth(event, action) {
+            event.preventDefault(); // Prevents page reload
+            // Note for Devs: Link to Firebase Auth or your database here
+            alert(`Successful ${action}! (Connect your database to store real users).`);
+            closeModal('authModal');
+            event.target.reset(); // Clears form
+        }
+
+        // --- PAYMENT LOGIC ---
+        const paymentModal = document.getElementById("paymentModal");
+        const checkoutPlanName = document.getElementById("checkoutPlanName");
+        const checkoutPlanPrice = document.getElementById("checkoutPlanPrice");
+
+        // Open checkout when clicking a pricing plan
+        document.querySelectorAll('.select-plan-btn').forEach(button => {
+            button.onclick = function(e) {
+                // Grab plan data
+                const card = e.target.closest('.pricing-card');
+                const title = card.querySelector('.plan-title').innerText;
+                const price = card.querySelector('.plan-price').innerText;
+
+                // Populate checkout modal
+                checkoutPlanName.innerText = title + " Membership";
+                checkoutPlanPrice.innerText = price;
+
+                // Show modal
+                paymentModal.style.display = "flex";
+            }
+        });
+
+        function processPayment(method) {
+            // Note for Devs: Link to Razorpay or PhonePe PG API here
+            alert(`Opening secure ${method} gateway...`);
+            
+            // Automatic deep-link for mobile users clicking UPI options
+            if((method === 'Google Pay' || method === 'PhonePe') && /Mobi|Android/i.test(navigator.userAgent)) {
+                // Format: upi://pay?pa=YOUR_UPI_ID&pn=YOUR_BUSINESS_NAME&am=AMOUNT
+                window.location.href = "upi://pay?pa=yourvpa@upi&pn=IronForgeGym&cu=INR";
+            }
+        }
+    </script>
+</body>
+</html>
